@@ -1,0 +1,1451 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Marine CBE Practice</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://img.icons8.com/fluency/48/gear.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <aside class="sidebar">
+        <div class="profile-section">
+          <h3>
+            <img
+              src="tool-gear-logo-20171380.webp"
+              alt="Engine Icon"
+              class="engine-icon"
+            />
+
+            <span class="cbe-text">CBE</span>
+            <span class="system-text">SYSTEM</span>
+          </h3>
+          <span class="profile-division-text">
+            Marine Engineering Division
+          </span>
+        </div>
+        <div class="timer-card"><div id="timer">03:00:00</div></div>
+        <div class="question-nav">
+          <h4>Question Map</h4>
+          <div id="question-grid" class="grid"></div>
+        </div>
+      </aside>
+      <main class="content-area">
+        <header class="top-header"><h2>COC(Class III) Examination</h2></header>
+        <div id="question-box" class="question-box">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 15px;
+            "
+          >
+            <span
+              id="question-number"
+              style="font-weight: bold; color: #666"
+            ></span>
+            <span
+              id="section-name"
+              style="
+                background: #0d124a;
+                color: white;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+              "
+            ></span>
+          </div>
+          <p id="question-text"></p>
+          <div id="image-container"></div>
+          <div id="options"></div>
+        </div>
+        <div
+          id="result-screen"
+          class="question-box hidden"
+          style="text-align: center"
+        >
+          <h2>Result Summary</h2>
+          <div
+            id="score-percentage"
+            style="font-size: 80px; color: #0d124a; margin: 20px 0"
+          ></div>
+          <button class="finish-btn" onclick="location.reload()">
+            TRY AGAIN
+          </button>
+        </div>
+        <footer id="nav-footer" class="action-footer">
+          <button id="prev-btn" onclick="prevQuestion()">Previous</button>
+          <button id="next-btn" onclick="nextQuestion()">Next</button>
+          <button
+            id="submit-btn"
+            class="finish-btn hidden"
+            onclick="finishExam()"
+          >
+            Submit
+          </button>
+        </footer>
+      </main>
+    </div>
+    <script>
+      // --- QUESTIONS DATABASE ---
+      const mcq_questions = [
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Huntering gear mechanism in the steering gear system is a _________.",
+          options: [
+            "Feedback mechanism",
+            "Transmit the position of the rudder to the pump control lever, through the floating lever",
+            "One end of the floating lever is connected to the hunting lever and the other end is connected to the telemotor reciver. The pump control lever is connected to the middle of the floating lever",
+            "Above all ",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "During the power stroke in a 4-stroke diesel engine _________.",
+          options: [
+            "Air is drawn into the cylinder",
+            "Fuel is injected and burnt",
+            "Expelled the exhaust gases",
+            "None of the above",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Diesel engine works on which cycle?",
+          options: [
+            "Otto Cycle",
+            "Diesel Cycle",
+            "Dual Cycle",
+            "All of the above",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Type of pump used in steering gear system is _________.",
+          options: [
+            "Constant speed variable stroke delivery pump(Radial piston type & Axial piston type)",
+            "Mono-eccentric pump",
+            "Roto-dynamic pump",
+            "None of the above",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Super charging is the process of __________.",
+          options: [
+            "Cool down the engine",
+            "Increasing the density of fresh air introduced into the cylinder allowing more fuel to burnt to produce more power.",
+            "To reduce the engine vibration and noise",
+            "All of the above",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "In deep bed filtration method, particles are collected by __________.",
+          options: [
+            "Outsite the filter element when particles passing through",
+            "Inside the filter element when particles passing through",
+            "Underneath the filter element",
+            "All of the above",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Thrust bearing functions are to __________.",
+          options: [
+            "Support the axial thrust of the propeller shaft",
+            "To prevent the thrust form drifting in the axial direction",
+            "To tramit load applied on the shaft",
+            "All of the above",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Pump are classified into two types, they are __________.",
+          options: [
+            "Positive displacement pump",
+            "Non-positive displacement pump",
+            "Electric pump",
+            "Positive displacement pump and Non-positive displacement pump",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Salinometer cock in a boiler is to ________.",
+          options: [
+            "Drain the boiler water",
+            "Purge out air",
+            "To take sampling for water analysis",
+            "All of the above",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "In the water tube boilers _________ while the exhaust gases remain in the shell side, passing over the tube surface",
+          options: [
+            "Boiler water passes through the tubes",
+            "Boiler water stays in the tube",
+            "Boiler water passes through the bottom side",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Gas turbines work on which of the following cycles?",
+          options: [
+            "Diesel cycle",
+            "Brayton cycle",
+            "Rankine cycle",
+            "None of the above",
+          ],
+          correct: 1,
+        },
+        // ဤနေရာမှစပြီး MCQ များကို စိတ်ကြိုက် ဆက်ထည့်ရန်
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "In principle the impulse steam turbine consists of __________.",
+          options: [
+            "A casing with stationary steam nozzles and moving blades",
+            "A casing with moving steam nozzles and a rotor with fixed blades",
+            "A casing with moving steam nozzles a rotor with moving blades",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Auxiliary engine starting air system consists of __________.",
+          options: [
+            "Air receiver and starting air control valve",
+            "Air starting  distributor",
+            "Starting air valve",
+            "All of the above",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "In a large 2-stroke crosshead marine diesel engine, the process of removing exhaust gases from the cylinder and replacing them with a fresh charge of air is known as __________.",
+          options: [
+            "Induction",
+            "Supercharging",
+            "Scavenging",
+            "Turbocharging",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Purpose of buffer spring __________.",
+          options: [
+            "To absorb the axial thrust of the rams",
+            "To make the ram movement easy",
+            "To prevent steering motor overload",
+            "To absorb the vibration and shocks from the rudder",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Current clamp meter acts as a current transformer to measure the:",
+          options: ["Voltage", "Resistance", "Current", "Power factor"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Preference trip relay acts:",
+          options: [
+            "To produce generator",
+            "To trip selected none essential loads",
+            "To trip the generator main circuit breaker",
+            "To rise the engine revolution",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "An induction motor has been flooded with sea water and its insulation resistance is down to zero mega ohms. The procedure putting the motor back into service is:",
+          options: [
+            "Clean with fresh water",
+            "Drying",
+            "Revarnishing",
+            "Above all",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Single phasing means:",
+          options: [
+            "All the phases out of power",
+            "One of the phases out of power",
+            "Over voltage of the motor",
+            "None of above",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "D.P.D.T stands for:",
+          options: [
+            "Duplex pole dead-throw switch",
+            "Double-pole duplex terminal ",
+            "Double-pole double-throw switch",
+            "Direct power to direct terminal",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The electrolyte in a lead-acid stroage battery is:",
+          options: ["HC", "H2SO4", "CaCl2", "MgCl2"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Brushes are made of:",
+          options: ["Lead", "Castile", "Carbon", "Lignite"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Brushless A.C generator E.M.F voltage is produced from:",
+          options: ["Stator", "Rotating diode", "Slip ring", "Field exciter"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "If the running motor has 4 poles & 50 Hz, R.P.M should be:",
+          options: ["1000", "1500", "500", "2000"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Battery terminal are suitable to be used:",
+          options: [
+            "Grease",
+            "Petroleum jelly",
+            "Lubricating oil",
+            "Crude oil",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The horsepower of a motor with effective resistance of 2 ohms on a 110 volts line is:",
+          options: [
+            "16 horsepower",
+            "12 horsepower",
+            "8 horsepower",
+            "10 horsepower",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Which of the following instrument can be used to measure wire size?",
+          options: ["Anemometer", "Micrometer", "Mugger", "Dividers"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Which of the following item is nessary to keep a stroage battery in good operation?",
+          options: [
+            "Maintain proper specific gravity",
+            "Keep cool and well ventilated",
+            "Maintain proper level of electrolyte",
+            "All of the above",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Which of the following is not a good conductor of electricity?",
+          options: ["Copper", "Mica", "Silver", "Aluminnum"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Before working on an electrical circuit:",
+          options: [
+            "Open the switch",
+            "Lock the switch 'do not close'",
+            "Have required tools and meters ready",
+            "All of the above",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "A full charged battery reads from:",
+          options: ["1.27-1.285", "1.025-1.1075", "1.185-1.190", "1.20-1.50"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "If a step-down transfomer has 120 volts in the primary and the turns ratio is 6:1, the secondary will put put:",
+          options: ["60 volts", "16 volts", "20 volts", "720 volts"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "When using ohm's law, E/R would solve for",
+          options: ["Ampere", "Voltage", "Watts", "Resistance"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Motor revolution rating is depend on:",
+          options: [
+            "Frequency",
+            "Number of poles",
+            "Voltage",
+            "All of the above",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The proper wrench which practically eliminates the possibility of slipping when tightening a nut or boileris:-",
+          options: [
+            "Open end wrench",
+            "Box end wrench",
+            "Crescent wrench",
+            "Spanner wrench",
+          ],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Why is a covering applied to a welding electrode, rather than using a bare electrode?",
+          options: [
+            "Protect the welder from electric shock",
+            "Prevent arc blow",
+            "Sheild the arc during the welding process to prevent oxidation",
+            "Stabilize the electron emission rate and produce uniform temperatures in the heat affected zone",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "To tighten the bolts of a crankpin bearing to the exact tension as per manufacturers instruction, you should use a/an:",
+          options: [
+            "Dial wrench",
+            "Offset box end",
+            "Torque wrench",
+            "Hook spanner",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "If a steel is heated slightly above the upper critical temperature and allowed to cool freely in still air at room temperature is called:-",
+          options: ["Annealing", "Normalizing", "Hardening", "Tempering"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Large size pipe can be easily rotated with a:-",
+          options: [
+            "Monkey wrench",
+            "Strong back",
+            "Chain pipe wrench",
+            "Pipe turner",
+          ],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Properties of Metals are:",
+          options: [
+            "Plasticity",
+            "Hardness",
+            "Tensile strength",
+            "Brittleness",
+            "All of the above",
+          ],
+          correct: 4,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Pinning is often caused by:",
+          options: [
+            "Dropping the file",
+            "Chalking the file",
+            "Cleaning the file",
+            "Bearing too hard on the file",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "A new file should be broken in carefully by filing a piece of:",
+          options: [
+            "Monel stock using heavy pressure",
+            "Bronze stock using light pressure",
+            "Stainless steel stock using light pressure",
+            "Brass stock using light pressure",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Protective equipment to be used while carrying out oxyacetylene welding should always include __________.",
+          options: [
+            "Goggles",
+            "Ear-plugs",
+            "Non-sparking tools",
+            "Steel toe safety shoes",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "A gas mask can be only used whene there is:",
+          options: [
+            "At last 16% oxygen present",
+            "Less than 16% oxygen present",
+            "Less than 10% oxygen present",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The hard soldering is called:-",
+          options: [
+            "Gas-welding ",
+            "Arc welding",
+            "Brazing",
+            "Thermal cutting",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Brass is an alloy of:",
+          options: [
+            "Coper and tin",
+            "Copper and lead",
+            "Coper and zinc",
+            "Coper and aluminum",
+          ],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Which of the following fire extinguishers would be effective on an oil fire but dangerous to use on an electrical fire?",
+          options: ["Foam", "CO₂ (Carbon Dioxide)", "Dry Chemical Powder"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The job of finding the clearance in a bearing is known as:",
+          options: ["Taking leads", "Checking Bearing", "Rolling leads"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Globules or particles of metal scattered on (or) around at the deposited metal is called",
+          options: ["Porosity", "Overlap", "Spatter", "Undecut"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Which of the following listed pressures is the maximum acetylene gas pressure that cam be safely used in gas welding?",
+          options: ["10 psi", "15 psi", "25 psi", "35 psi"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "In general file are divided into two classes called:",
+          options: [
+            "Single cut and double cut",
+            "Fine and coarse",
+            "Rough and smoth",
+          ],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The hand tool used for cutting threads on round stoe is the:",
+          options: ["Stock and die", "Die crenel", "Stock"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "The ability of a material to undergo permanent change in shape without rupture is:",
+          options: ["Brittleness", "Hardness", "Ductility", "Toughness"],
+          correct: 3,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "Steel is heated up to it upper critical range about 850⁰-950⁰C then rapidly cooled by quenching in oil or water is ",
+          options: ["Annealing", "Normalizing", "Hardening", "Tempering"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Multiple Choice",
+          text: "What is the purpose of an intercooler in a multi-stage air compressor?",
+          options: [
+            "To increase the pressure of air",
+            "To remove the heat of compression and reduce the air volume",
+            "To increase the air temperature",
+            "To lubricate the compressor cylinder",
+          ],
+          correct: 1,
+        },
+      ];
+
+      const fill_questions = [
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Hunting gear is a __________ of steering gear which repositions the floating lever of hydraulic pump as the tiller moves to the desired position.",
+          correct: "feed back mechanism",
+        },
+        // ဤနေရမှစပြီး Fill-in-blank များကို ဖြည့်ပါ ///
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "On ships, the steam turbine can also be used as a __________.",
+          correct: "direct propulsion plant",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Turbine is an engine that converts energy of fluid into ___________.",
+          correct: "mechanical energy",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "A gas turbine, also called a combustion turbine, is a type of continuous flow____________.",
+          correct: "internal combustion engine",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "A dual cycle engine consists of four main processes:_________.",
+          correct: "intake, compression,combustion and expansion.",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Diesel cycle is considered as the ideal cycle for diesel engine or compression ignition engine. In this cycle heat addition is at _________.",
+          correct: "constant pressure",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Otto cycle is considered as the _________ for petrol or sparl ignition engine. In this cycle heat addition is at constant volume.",
+          correct: "ideal cycle",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "In a shell and tube type heat exchanger, tube stack can be arranged as either single or double pass, this require that _________ the flow of liquid through the correct tubes.",
+          correct: "the end covers direct",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Falling mains frequency or voltage causes the ________  to operate the engine starting equipment.",
+          correct: "start-up relay",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Large bumpimg clearance retards the _________  on the suction stroke and thus less air is drawm inside for compression.",
+          correct: "formation of vaccum",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Refrigeration and air condition system work on the principle of __________.",
+          correct: "cooling by evaporation",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "In a centrigugal pump liquid enters the eye of the impeller and is made to flow radially outwards by __________.",
+          correct: "centrifugal force between the impeller vanes",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The gravity disc sets the location of the ___________.",
+          correct: "oil and water interface line",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Biological sewage treatment plant consist of three main components ___________.",
+          correct:
+            "aeration chaamber, settling chamber and chlorinating cahmber",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "During valve overlap ____________.",
+          correct:
+            "the fresh air rushes into the cylinder liner and expelled the foul gases till the exhaust valve closes",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "To take up side and end loads engines are fitted with _________.",
+          correct: "side or end chocks",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The engine structure from the bed plate to the entablature is hold in compression by the _________.",
+          correct: "tie bolts",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The purpose of surface blow-down is __________.",
+          correct: "to remove oil and scum from the surface of water",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Salt contant in distilled water was measured by _________.",
+          correct: "salinometer",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "In an air condition system moisture is removed from air by ___________.",
+          correct: "De-humidifier",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The general purpose of a heat exchanger is to _________.",
+          correct: "heat or cool one fluid by means of another fluid",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The component of a refrigerating system in which the refrigerant vaporizes and absorbs heat _________.",
+          correct: "is known as the evaporator",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "__________ is a device which is wiedly used as pyrometer on board ship for continuous measurement if temperature for various machineries like Main engine, Auxiliary engine, Gas turbines.",
+          correct: "Thermocouple",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The operation of turning a grindling a wheel is known as _________.",
+          correct: "dressing",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Water hammer is caused by _________.",
+          correct: "water in steam line",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Cylinder shall be used and stored in an ________ position.",
+          correct: "uptight",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Most butt joints designed for _________ welding, hvae the beveled plate positioned on the top.",
+          correct: "horizontal",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "In an air condition system moisture is removed from air by _________.",
+          correct: "De-humidifier",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Salt content in distilled water wa measured by __________.",
+          correct: "Salinometer",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "A centrifugal brake is provided to avoid the lifeboat '__________', while being lowered.",
+          correct: "running away",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Before installing a new flange gasket be sure that the ________.",
+          correct: "flange faces are throughly cleaned",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The boiler feed water in the feed water heater is heated by _________.",
+          correct: "auxiliary exhaust steam",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The purpose of surface blowing is _________.",
+          correct: "to remove oil and scum from the surface of water",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Acetylene is supplied in cylinders under a pressure of about ________ but welding is carried out with torch gas pressure typically up to 2 Bar.",
+          correct: "15 Bar",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Never use a cutting torch where __________ will be a hazards.",
+          correct: "sparks",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "In the evaporator ________ from the room amd boils off into vapors resulting in temperature drop of that room.",
+          correct: "the refrigerant takes up the heat",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "Function of diffuser in turbocharger is _________.",
+          correct:
+            "to direct the air smoothly into volute casing, convert kinetic energy to pressure energy of inlet air.",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The best conductor of heat in a marine boiler is _______.",
+          correct: "steel",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The rate of the expansion of heated fuel oil varies with the specific _________.",
+          correct: "gravity",
+        },
+        {
+          type: "fill",
+          section: "Fill in Blank",
+          text: "The temperature of the arc between two conductors is approximately __________.",
+          correct: "3500 deg C to 4000 deg C",
+        },
+      ];
+
+      const tf_questions = [
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In pure sinusoidal wave, root mean square value is 0.707 times maximum value.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "SSD means Solid State Devices.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "AC current can be measure by using Clamp Meter.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "SPDT stand for 'Single Pole Dead Throw' switch.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        // ဤနေရာတွင် True/False များ ဆက်ထည့်ရန်
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In electric motor name plate FLC is 'Full Load Current'.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In pure sinusoidal wave, root mean square value is 7.07 times maximum value.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Two fundamental type of DC motors are series and shunt motors.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "The most common type of Mercury gas is used in discharge lamps.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Frequency is measured unit Hertz.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In low voltage system megger meter producces 500volts DC.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In lead acid battery each cell contain 2.0 volts.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "A device which converts DC to AC is called inverter.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Specific gravity of fully charge lead acid battery is 1075,(1.075).",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "In fault finding imagination thinking is necessary.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Even the main engine is running at varying sea speed the auto voltage regulator(AVR) maintains constant alternatorfrequency.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "The unit of resistance in DC current is Henry.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Silver is an insulator.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Electric current can flow in an insulator.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Electric current can flow only in an opened path.",
+          options: ["True", "False"],
+          correct: 1,
+        },
+        {
+          type: "tf",
+          section: "True(or)False",
+          text: "Electrons carry Negative charge.",
+          options: ["True", "False"],
+          correct: 0,
+        },
+      ];
+
+      const label_questions = [
+        {
+          type: "label",
+          section: "Labelling",
+          text: "Identify 'A' in the Centrifugal Pump diagram.",
+          image: "Centrifugal Pump Diagram.png",
+          options: ["Stuffing Box", "Casing", "Shaft", "Eye"],
+          correct: 0,
+        },
+        {
+          type: "label",
+          section: "Labelling",
+          text: "In this Marine Air Compressor diagram, identify the component marked 'B'.",
+          image: "two-stage-air-compressor.png",
+          options: ["Intercooler", "Aftercooler", "Second stage section valve", "LP Cylinder"],
+          correct: 0,
+        },
+        {
+          type: "label",
+          section: "Labelling",
+          text: "Identify the part of the 2-Stroke Diesel Engine indicated as 'C'.",
+          image: "Two Storke.png",
+          options: [
+            "Cylinder Liner",
+            "Stuffing Box",
+            "Crosshead Guide",
+            "Connecting Rod",
+          ],
+          correct: 1,
+        },
+        {
+          type: "label",
+          section: "Labelling",
+          text: "Identify the part of the Shell and Tube Heat Exchanger marked 'C'.",
+          image: "Shell-and-tube- heat exanger.png",
+          options: ["Tube Bundle", "Baffles", "End Cover", "Shell"],
+          correct: 1,
+        },
+        {
+          type: "label",
+          section: "Labelling",
+          text: "In this Purifier (Centrifugal Separator) diagram, what is '6'?",
+          image: "Purifier.png",
+          options: ["Top Disc", "Bowl Spindle", "Sludge Port", "Paring Disc"],
+          correct: 0,
+        },
+      ];
+
+     const match_questions = [
+        {
+          type: "mcq",
+          section: "Matching",
+          text: "Match: Fuel Valve function is to?",
+          options: ["Inject Fuel", "Cool Engine", "Compress Air", "Lubricate"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Matching",
+          text: "Match: Turbocharger function is to?",
+          options: ["Inject Lubricating Oil", "Supply pressurized air to cylinders", "Cool the jacket water", "Separate water from fuel"],
+          correct: 1,
+        },
+        {
+          type: "mcq",
+          section: "Matching",
+          text: "Match: Piston Ring function is to?",
+          options: ["Filter the fuel oil", "Increase the engine speed", "Seal the combustion chamber", "Open the exhaust valve"],
+          correct: 2,
+        },
+        {
+          type: "mcq",
+          section: "Matching",
+          text: "Match: Heat Exchanger function is to?",
+          options: ["Transfer heat between two fluids", "Generate electrical power", "Store compressed air", "Purify the heavy fuel oil"],
+          correct: 0,
+        },
+        {
+          type: "mcq",
+          section: "Matching",
+          text: "Match: Bilge Pump function is to?",
+          options: ["Transfer fuel from bunker tank", "Remove water from engine room bottom", "Supply starting air", "Circulate sea water for cooling"],
+          correct: 1,
+        }
+      ];
+      const draw_questions = [
+        {
+          type: "draw",
+          section: "Drawing",
+          text: "Draw a simple Globe Valve symbol.",
+        },
+        // ဤနေရာတွင် Drawing ၂ ခု ဆက်ထည့်ပါ
+      ];
+
+      const essay_questions = [
+        {
+          type: "essay",
+          section: "Essay",
+          text: "Explain the procedure for starting a Marine Air Compressor.",
+        },
+        // ဤနေရာတွင် Essay ၃ ခု ဆက်ထည့်ပ
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the difference between a strainer and a filter?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "State the purpose of un-loader valve & drain valve.",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "Three main boiler system namely?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the type of steering gear used on ship?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "Explain closed loop system?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "Why are preferential trips provided in generators?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "State three different type of electrical fault and explain one?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the possible reason for a motor falling to start?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the five basic and joints?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the principle parts of the lathe machine.",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "Explain boiler surface blow and bottom blow down procedure?",
+        },
+        {
+          type: "essay",
+          section: "Essay",
+          text: "What are the five major safety concerns while welding?",
+        },
+      ];
+
+     const calc_questions = [
+        {
+          type: "calc",
+          section: "Calculation",
+          text: "If P=4500kW and N=120RPM, find Torque (kNm). (Formula: P = 2πNT/60)",
+          correct: "358.1",
+        },
+        {
+          type: "calc",
+          section: "Calculation",
+          text: "A fuel tank measures 5m x 4m x 3m. If it is 80% full, calculate the volume of fuel (m³).",
+          correct: "48",
+        },
+        {
+          type: "calc",
+          section: "Calculation",
+          text: "Calculate the Slip (%) if Engine Speed is 100 RPM and Ship Speed is 15 knots (Pitch = 3m, 1 knot = 30.89 m/min).",
+          correct: "18.9",
+        },
+        {
+          type: "calc",
+          section: "Calculation",
+          text: "If a pump delivers 120 m³ of water in 2 hours, what is its flow rate in m³/min?",
+          correct: "1",
+        },
+        {
+          type: "calc",
+          section: "Calculation",
+          text: "Find the Compression Ratio if Cylinder Volume (Vs+Vc) is 500 cm³ and Clearance Volume (Vc) is 50 cm³.",
+          correct: "10",
+        }
+      ];
+
+      // မေးခွန်းအားလုံးကို တစ်ခုတည်းအဖြစ် ပေါင်းစည်းခြင်း
+      const questions = [
+        ...mcq_questions,
+        ...fill_questions,
+        ...tf_questions,
+        ...label_questions,
+        ...match_questions,
+        ...essay_questions,
+        ...draw_questions,
+        ...calc_questions,
+      ];
+
+      // --- CORE ENGINE ---
+      let currentIdx = 0;
+      let userAnswers = new Array(questions.length).fill(null);
+      let timeLeft = 10800;
+
+      function startTimer() {
+        setInterval(() => {
+          let h = Math.floor(timeLeft / 3600);
+          let m = Math.floor((timeLeft % 3600) / 60);
+          let s = timeLeft % 60;
+          document.getElementById("timer").innerText =
+            `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+          if (timeLeft > 0) timeLeft--;
+          else finishExam();
+        }, 1000);
+      }
+
+      function loadQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById("question-number").innerText =
+          `Question ${currentIdx + 1} of ${questions.length}`;
+        document.getElementById("section-name").innerText = q.section;
+        document.getElementById("question-text").innerText = q.text;
+
+        // loadQuestion() function ထဲမှာ ရှာပြီး ဒါနဲ့ အစားထိုးပါ
+        // loadQuestion() ထဲက image အပိုင်းမှာ ဒါလေးပဲ ထားပါ
+        const imgCont = document.getElementById("image-container");
+        imgCont.innerHTML = q.image
+          ? `<img src="${q.image}" alt="Question Diagram">`
+          : "";
+        const optCont = document.getElementById("options");
+        imgCont.innerHTML = q.image
+          ? `<img src="${q.image}" style="max-height:180px; margin-bottom:15px; border-radius:10px;">`
+          : "";
+        optCont.innerHTML = "";
+
+        if (["mcq", "tf", "label"].includes(q.type)) {
+          q.options.forEach((opt, i) => {
+            const div = document.createElement("div");
+            div.className = `opt-box ${userAnswers[currentIdx] === i ? "selected" : ""}`;
+            div.innerText = opt;
+            div.onclick = () => {
+              userAnswers[currentIdx] = i;
+              loadQuestion();
+            };
+            optCont.appendChild(div);
+          });
+        } else if (q.type === "fill" || q.type === "calc") {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.className = "opt-box";
+          input.style.width = "100%";
+          input.value = userAnswers[currentIdx] || "";
+          input.placeholder = "Type answer here...";
+          input.oninput = (e) => {
+            userAnswers[currentIdx] = e.target.value;
+            updateMap();
+          };
+          optCont.appendChild(input);
+        } else if (q.type === "essay") {
+          const txt = document.createElement("textarea");
+          txt.className = "opt-box";
+          txt.style.width = "100%";
+          txt.style.height = "120px";
+          txt.value = userAnswers[currentIdx] || "";
+          txt.oninput = (e) => {
+            userAnswers[currentIdx] = e.target.value;
+            updateMap();
+          };
+          optCont.appendChild(txt);
+        } else if (q.type === "draw") {
+          optCont.innerHTML =
+            '<canvas id="canv" width="500" height="200" style="border:2px dashed #999; background:#fff;"></canvas>';
+          setupCanvas();
+        }
+
+        const isLast = currentIdx === questions.length - 1;
+        document.getElementById("next-btn").classList.toggle("hidden", isLast);
+        document
+          .getElementById("submit-btn")
+          .classList.toggle("hidden", !isLast);
+        document.getElementById("prev-btn").disabled = currentIdx === 0;
+        updateMap();
+      }
+
+      function updateMap() {
+        const grid = document.getElementById("question-grid");
+        grid.innerHTML = "";
+
+        let lastSection = "";
+
+        questions.forEach((q, i) => {
+          // Section အသစ်ရောက်တိုင်း ခေါင်းစဉ် (Label) ထည့်ပေးခြင်း
+          if (q.section !== lastSection) {
+            const label = document.createElement("div");
+            label.innerText = q.section;
+            label.style.gridColumn = "1 / -1"; // ဘေးအပြည့်ယူမယ်
+            label.style.fontSize = "12px";
+            label.style.marginTop = "10px";
+            label.style.color = "var(--gold)";
+            label.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+            grid.appendChild(label);
+            lastSection = q.section;
+          }
+
+          const s = document.createElement("span");
+          s.innerText = i + 1;
+          if (userAnswers[i] !== null && userAnswers[i] !== "")
+            s.className = "answered";
+          if (i === currentIdx) s.classList.add("current");
+          s.onclick = () => {
+            currentIdx = i;
+            loadQuestion();
+          };
+          grid.appendChild(s);
+        });
+      }
+
+      function setupCanvas() {
+        const c = document.getElementById("canv");
+        if (!c) return;
+        const ctx = c.getContext("2d");
+        let drawing = false;
+        c.onmousedown = () => (drawing = true);
+        c.onmouseup = () => {
+          drawing = false;
+          ctx.beginPath();
+          userAnswers[currentIdx] = "Drawn";
+          updateMap();
+        };
+        c.onmousemove = (e) => {
+          if (!drawing) return;
+          const r = c.getBoundingClientRect();
+          ctx.lineWidth = 2;
+          ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+          ctx.stroke();
+        };
+      }
+
+      function finishExam() {
+        document.getElementById("question-box").classList.add("hidden");
+        document.getElementById("nav-footer").classList.add("hidden");
+        document.getElementById("result-screen").classList.remove("hidden");
+
+        let score = 0;
+        questions.forEach((q, i) => {
+          if (["mcq", "tf", "label"].includes(q.type)) {
+            if (userAnswers[i] === q.correct) score++;
+          } else if (["fill", "calc"].includes(q.type)) {
+            if (
+              userAnswers[i] &&
+              userAnswers[i].toLowerCase().trim() === q.correct.toLowerCase()
+            )
+              score++;
+          } else if (userAnswers[i]) {
+            score++;
+          }
+        });
+
+        const finalPercent = Math.round((score / questions.length) * 100);
+        document.getElementById("score-percentage").innerText =
+          finalPercent + "%";
+      }
+
+      function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+          currentIdx++;
+          loadQuestion();
+        }
+      }
+      function prevQuestion() {
+        if (currentIdx > 0) {
+          currentIdx--;
+          loadQuestion();
+        }
+      }
+
+      window.onload = () => {
+        startTimer();
+        loadQuestion();
+      };
+    </script>
+  </body>
+</html>

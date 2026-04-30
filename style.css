@@ -1,0 +1,342 @@
+:root {
+  --navy: #0d124a;
+  --gold: #ffca28;
+  --danger: #e53935;
+  --success: #2e7d32;
+  --bg: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  height: 100vh;
+  display: flex;
+}
+
+.main-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 300px;
+  background: var(--navy);
+  color: white;
+  padding: 30px 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-card {
+  background: var(--danger);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 20px 0;
+  border: 2px solid var(--gold);
+}
+
+#timer {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: monospace;
+}
+/* Profile Section Container */
+.profile-section {
+  padding: 20px 15px;
+  margin-bottom: 25px;
+  background: linear-gradient(145deg, #0a0e3a, #11185a); /* Gradient နောက်ခံ */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 202, 40, 0.3); /* ရွှေရောင်ဘောင် အသေ */
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 15px rgba(255, 202, 40, 0.1);
+  text-align: center;
+  transition: none; /* Hover effect ဖြုတ်ထားသည် */
+}
+
+/* Hover effect အားလုံးကို ဖြုတ်လိုက်သည် */
+.profile-section:hover {
+  transform: none;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 15px rgba(255, 202, 40, 0.1);
+  border-color: rgba(255, 202, 40, 0.3);
+}
+
+/* CBE SYSTEM Title Styling (တစ်ကြောင်းတည်းဖြစ်အောင်လုပ်ခြင်း) */
+.profile-section h3 {
+  margin: 0;
+  padding: 0;
+  display: flex; /* Flex box သုံးပြီး ဘေးချင်းယှဉ်မယ် */
+  align-items: center; /* အမြင့်တူအောင်ညှိမယ် */
+  justify-content: center; /* အလယ်တည့်တည့်မှာထားမယ် */
+  gap: 10px; /* Icon နဲ့ စာကြား အကွာအဝေး */
+  font-size: 20px; /* စာလုံးအရွယ်အစား */
+  font-weight: 800;
+}
+
+/* Engine Icon (Gear & Piston) Styling */
+.engine-icon {
+  width: 35px; /* Size ကို နည်းနည်းညှိလိုက်တယ် */
+  height: 35px;
+  object-fit: contain;
+
+  /* ရွှေရောင် Glow Effect အသေပေါ်နေအောင် */
+  filter: drop-shadow(0 0 12px rgba(255, 202, 40, 0.9)) brightness(1.2)
+    contrast(1.2);
+
+  transition: none; /* Hover animation ဖြုတ်သည် */
+}
+
+/* Hover ဖြစ်ရင် စက်သွားမလည်အောင် ဖြုတ်လိုက်သည် */
+.profile-section:hover .engine-icon {
+  transform: none;
+  filter: drop-shadow(0 0 12px rgba(255, 202, 40, 0.9)) brightness(1.2)
+    contrast(1.2);
+}
+
+/* CBE (White Text) */
+.profile-section h3 span.cbe-text {
+  color: #ffffff; /* White */
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* SYSTEM (Gold Text) */
+.profile-section h3 span.system-text {
+  color: #ffca28; /* Gold */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 202, 40, 0.4);
+}
+
+/* Marine Engineering Division Subtext */
+.profile-division-text {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  display: inline-block;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(
+    4,
+    1fr
+  ); /* ၄ ကွက်စီပဲ ထားတာ ပိုကြည့်ကောင်းတယ် */
+  gap: 8px;
+  max-height: 400px; /* Sidebar ထက်ကျော်မထွက်အောင် scroll ထည့်တာ */
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Scrollbar ကို ပိုလှအောင်လုပ်ခြင်း */
+.grid::-webkit-scrollbar {
+  width: 5px;
+}
+.grid::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 10px;
+}
+.grid span {
+  background: rgba(255, 255, 255, 0.1);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.grid span.answered {
+  background: var(--success);
+}
+.grid span.current {
+  border: 2px solid var(--gold);
+  color: var(--gold);
+}
+
+/* Main Content Area */
+.content-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-header {
+  background: white;
+  padding: 20px 40px;
+  border-bottom: 4px solid var(--gold);
+  color: var(--navy);
+}
+
+.question-box {
+  margin: 30px 40px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  flex-grow: 1;
+}
+
+#question-text {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1a237e;
+}
+/* ပုံကို အကြီးကြီးမြင်ရအောင် လုပ်ခြင်း */
+#image-container img {
+  display: block;
+  width: auto; /* ပုံရဲ့ မူလ width အတိုင်း ယူမယ် */
+  max-width: 90%; /* ဒါပေမယ့် screen ဘောင်ထက်တော့ မကျော်စေဘူး */
+  max-height: 500px; /* အမြင့်ကို ၅၀၀ အထိ ခွင့်ပြုလိုက်မယ် (အရင်က ၁၈၀ ပဲရှိတာ) */
+  margin: 20px auto; /* အပေါ်အောက် ခြားပြီး အလယ်တည့်တည့် ထားမယ် */
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* ပုံကို ထင်းနေအောင် shadow ထည့်တာ */
+  border: 2px solid #ddd; /* ပုံဘောင်လေး ခတ်ထားမယ် */
+  transition: transform 0.3s ease; /* Mouse တင်ရင် တုံ့ပြန်ဖို့ */
+}
+
+/* Mouse တင်ရင် ပိုကြီးလာအောင် (Hover Effect) */
+#image-container img:hover {
+  transform: scale(1.05); /* ၅ ရာခိုင်နှုန်း ပိုကြီးလာမယ် */
+  border-color: var(--gold); /* ဘောင်ကို ရွှေရောင်ပြောင်းမယ် */
+}
+/* ဖြေဆိုရမည့် Option များကို လှပအောင် ပြင်ဆင်ခြင်း */
+.opt-box {
+  padding: 18px 25px;
+  border: 2px solid #e2e8f0;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 17px;
+  transition: all 0.3s ease;
+  background: #fdfdfd;
+  display: flex;
+  align-items: center;
+}
+
+.opt-box:hover {
+  border-color: var(--navy);
+  background: #f1f5f9;
+  transform: translateX(8px);
+}
+
+.opt-box.selected {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+  box-shadow: 0 4px 12px rgba(13, 18, 74, 0.2);
+}
+
+/* ၁။ ပုံမှန် စာရိုက်ကွက် စတိုင် */
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border: 2px solid rgba(13, 18, 74, 0.1); /* Navy Blue ဖျော့ဖျော့ဘောင် */
+  border-radius: 12px; /* ထောင့်ဝိုင်းလေးတွေ */
+  background-color: #fcfcfc;
+  color: #333;
+  font-size: 16px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* အထဲကို နည်းနည်းကျွံဝင်နေတဲ့ပုံစံ */
+  transition: all 0.3s ease; /* အကွက်ထဲထောက်လိုက်ရင် ဖြည်းဖြည်းချင်းပြောင်းလဲဖို့ */
+}
+
+/* ၂။ စာရိုက်ဖို့ အကွက်ထဲကို Mouse ထောက်လိုက်တဲ့အချိန် (Focus Mode) */
+input[type="text"]:focus,
+textarea:focus {
+  outline: none; /* အပြာရောင်ဘောင်အသေကို ဖျောက်တယ် */
+  border-color: #ffca28; /* ရွှေရောင်ဘောင် ပြောင်းသွားမယ် */
+  background-color: #ffffff; /* ပိုလင်းလာမယ် */
+  box-shadow: 0 0 10px rgba(255, 202, 40, 0.3); /* ရွှေရောင် Glow effect လေးထွက်လာမယ် */
+  transform: translateY(-2px); /* နည်းနည်းလေး ကြွတက်လာတဲ့ပုံစံ */
+}
+
+/* ၃။ Placeholder (စာမရိုက်ခင် မှိန်မှိန်လေးပေါ်နေတဲ့စာ) စတိုင် */
+input[type="text"]::placeholder {
+  color: #aaa;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* ၄။ Essay မေးခွန်းတွေအတွက် စာရိုက်တဲ့ box ကြီး (Textarea) */
+textarea {
+  min-height: 120px;
+  resize: vertical; /* အောက်ကိုပဲ ဆွဲချဲ့လို့ရအောင် */
+  line-height: 1.6;
+}
+/* Canvas Area */
+#canv {
+  border: 2px dashed #cbd5e1;
+  background: #fff;
+  border-radius: 12px;
+  display: block;
+  margin-top: 15px;
+}
+#mcq-detail span {
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+#result-screen h2 {
+  color: #0d124a;
+  border-bottom: 2px solid var(--gold);
+  display: inline-block;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+/* Action Buttons */
+.action-footer {
+  padding: 25px 40px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #eee;
+}
+
+button {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+#prev-btn {
+  background: #e2e8f0;
+  color: #475569;
+}
+#next-btn {
+  background: var(--navy);
+  color: white;
+}
+.finish-btn {
+  background: var(--success);
+  color: white;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+
+.hidden {
+  display: none !important;
+}
